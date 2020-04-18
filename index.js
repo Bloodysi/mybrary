@@ -19,7 +19,7 @@ require('./db')
 //SETTIGNS
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
-app.set('layouts', 'layouts/layout')
+app.set('layout', 'layouts/layout')
 
 //MIDDLEAWARES
 app.use(ejsLayouts)
