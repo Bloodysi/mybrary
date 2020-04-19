@@ -1,11 +1,9 @@
 const {Router} = require('express')
 const router = Router()
-const fs = require('fs')
 const path = require('path')
 const Author = require('../models/authors')
 const Book = require('../models/books')
-const uploadPath = path.join('public', Book.coverImageBasePath)
-
+const ImageMimeTypes = ["image/jpeg", "image/png", "image/gif"]
 
 //ALL BOOKS ROUTE
 router.get('/', async (req, res)=>{
@@ -33,36 +31,37 @@ router.get('/new', async (req, res)=>{
 //CREATE BOOK ROUTE
 
 router.post('/', async (req, res)=>{
-    const fileName = req.file != null ? req.file.filename : null
     const {title, author, publishDate, pageCount , description,} = req.body
     const book = new Book({
         title,
         author,
         publishDate: new Date(publishDate),
         pageCount,
-        coverImageName: fileName,
         description
     })
-
+    saveCover(book, req.body.cover)
+    console.log(req.body.cover)
     try{
         const newBook = await book.save()
         //res.redirect('authors/:${newBook.id}')
         res.redirect('books')
     }catch{
-        if(book.coverImageName != null){
-            removeBookCover(fileName)
-        }
         renderNewPage(res, book, true)
     }
 })
 
 //FUNCTIONS
 
-function removeBookCover(filename){
-    fs.unlink(path.join(uploadPath, filename), err=>{
-        if(err) console.error(err)
-    })
+function saveCover(book, coverEncoded){
+    if(coverEncoded == null) return 
+    const cover = JSON.parse(coverEncoded)
+    if(cover != null && ImageMimeTypes.includes(cover.type)){
+        book.coverImage = new Buffer.from(cover.data, 'base64')
+        book.coverImageType = cover.type
+    } 
+
 }
+
 
 async function renderNewPage(res, book, hasError = false){
     try{

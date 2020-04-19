@@ -8,8 +8,8 @@ const ejsLayouts = require('express-ejs-layouts')
 const app = express()
 
 //OTHER CONTENT
+const morgan = require('morgan')
 const path = require('path')
-const multer = require('multer')
 
 //ROUTES PATH
 const indexRouter = require('./routes/index')
@@ -25,11 +25,9 @@ app.set('views', __dirname + '/views')
 app.set('layout', 'layouts/layout')
 
 //MIDDLEAWARES
+app.use(morgan('dev'))
 app.use(ejsLayouts)
 app.use(express.urlencoded({extended: false, limit: '10mb'}))
-app.use(multer({
-    dest: path.join('public', 'uploads/bookCover')
-}).single('cover'))
 
 //ROUTES
 app.use('/', indexRouter)
