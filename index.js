@@ -9,6 +9,7 @@ const app = express()
 
 //OTHER CONTENT
 const morgan = require('morgan')
+const methodOverride = require('method-override')
 const path = require('path')
 
 //ROUTES PATH
@@ -20,6 +21,7 @@ const bookRouter = require('./routes/books')
 require('./db')
 
 //SETTIGNS
+app.set('port', process.env.PORT || 3000)
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 app.set('layout', 'layouts/layout')
@@ -28,6 +30,7 @@ app.set('layout', 'layouts/layout')
 app.use(morgan('dev'))
 app.use(ejsLayouts)
 app.use(express.urlencoded({extended: false, limit: '10mb'}))
+app.use(methodOverride('_method'))
 
 //ROUTES
 app.use('/', indexRouter)
@@ -38,6 +41,6 @@ app.use('/books', bookRouter)
 app.use(express.static('public'))
 
 //ON!
-app.listen(3000, ()=>{
+app.listen(app.get('port'), ()=>{
     console.log('server on!')
 })
