@@ -2,6 +2,7 @@ const {Router} = require('express')
 const router = Router()
 
 const Author = require('../models/authors')
+const Book = require('../models/books')
 
 //ALL AUTHORS ROUTE
 router.get('/', async (req, res)=>{
@@ -28,6 +29,21 @@ router.get('/new', (req, res)=>{
     res.render('authors/new', {author: new Author()})
 })
 
+
+//GET AUTHOR ROUTE
+router.get('/:id', async (req, res)=>{
+    try {
+        const author = await Author.findById(req.params.id)
+        const books = await Book.find({author: author.id})
+        res.render('authors/show',{
+            author: author,
+            booksByAuthor: books
+        })
+    } catch{        
+        res.redirect('/')
+    }
+}) 
+
 //CREATE AUTHOR ROUTE
 
 router.post('/',async (req, res)=>{
@@ -47,10 +63,6 @@ router.post('/',async (req, res)=>{
     }
 })
 
-//GET AUTHOR ROUTE
-router.get('/:id',(req, res)=>{
-    res.send('Author view: '+ req.params.id)
-}) 
 
 
 //EDIT AUTHOR ROUTE
@@ -89,7 +101,7 @@ router.put('/:id',async (req, res)=>{
 
 //DELETE AUTHOR ROUTE
 router.delete('/:id', async (req, res)=>{
-    let author 
+    let author, book 
     try {        
         author = await Author.findById(req.params.id)
         await author.remove()
