@@ -30,7 +30,7 @@ router.get('/new', (req, res)=>{
 })
 
 
-//GET AUTHOR ROUTE
+//SHOW AUTHOR ROUTE
 router.get('/:id', async (req, res)=>{
     try {
         const author = await Author.findById(req.params.id)

@@ -21,13 +21,13 @@ const bookRouter = require('./routes/books')
 require('./db')
 
 //SETTIGNS
-app.set('port', process.env.PORT || 3000)
+app.set('port', process.env.PORT || 3001)
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 app.set('layout', 'layouts/layout')
 
 //MIDDLEAWARES
-app.use(morgan('dev'))
+app.use(morgan('dev'))  
 app.use(ejsLayouts)
 app.use(express.urlencoded({extended: false, limit: '10mb'}))
 app.use(methodOverride('_method'))
