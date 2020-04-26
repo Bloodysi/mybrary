@@ -1,10 +1,17 @@
 <h2 class="page-header">Search authors</h2>
 
 <form action="/authors" method="GET">
-    <label>name</label>
-    <input type="text" name="name" value="<%= searchOption.name%>">
-    <button type="submit">Search</button>
+  <div class="form-row">
+    <div class="form-item">
+        <label>name</label>
+        <input type="text" name="name" value="<%= searchOption.name%>">
+    </div>
+  </div>
+  <div class="form-row form-row-end">
+    <button class="btn btn-primary" type="submit">Search</button>
+  </div>
 </form>
+
 
 <br>
 
@@ -16,4 +23,4 @@
       <%- include('../partials/deleteForm',
                   { url: `/authors/${author.id}` }) %>
     </div>
-  <% }) %>
+<% }) %>
