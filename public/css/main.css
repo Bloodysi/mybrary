@@ -9,6 +9,10 @@
     box-sizing: border-box;
 }
 
+*::placeholder{
+    color: hsl(var(--color-base-hue), 100%, 8%);
+}
+
 :root{
     font-family: 'Courier New', Courier, monospace;
     font-size: 20px;
@@ -36,4 +40,12 @@ body{
 
 .errorMessage{
     color: hsl(var(--color-danger-hue), 100%, 50%)
+}
+
+.register-label{
+    font-size: 12px;
+    text-decoration: none;
+    color: hsl(var(--color-base-hue), 100%, 50%);
+    position: absolute;
+    margin-top: 50px;
 }

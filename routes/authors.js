@@ -4,16 +4,23 @@ const router = Router()
 const Author = require('../models/authors')
 const Book = require('../models/books')
 
-//ALL AUTHORS ROUTE
-router.get('/', async (req, res)=>{
-    let searchOption = {}
+const {isLogin} = require('../lib')
 
+//ALL AUTHORS ROUTE
+router.get('/', isLogin, async (req, res)=>{
+    let searchOption = {}
+    let authors
     if (req.query.name != null && req.query.name !== ''){
         searchOption.name = new RegExp(req.query.name, 'i')        
     }    
 
     try {
-        const authors = await Author.find(searchOption)
+        if(searchOption.name){
+            authors = await Author.find(searchOption)
+        }else{
+            authors = await Author.find({user_id: req.user.id})
+        }
+        
         res.render('authors/index', {
             authors: authors,
             searchOption: req.query
@@ -25,13 +32,13 @@ router.get('/', async (req, res)=>{
 
 //NEW AUTHOR ROUTE
 
-router.get('/new', (req, res)=>{
+router.get('/new', isLogin, (req, res)=>{
     res.render('authors/new', {author: new Author()})
 })
 
 
 //SHOW AUTHOR ROUTE
-router.get('/:id', async (req, res)=>{
+router.get('/:id', isLogin, async (req, res)=>{
     try {
         const author = await Author.findById(req.params.id)
         const books = await Book.find({author: author.id}).limit(6).exec()
@@ -46,9 +53,10 @@ router.get('/:id', async (req, res)=>{
 
 //CREATE AUTHOR ROUTE
 
-router.post('/',async (req, res)=>{
+router.post('/',isLogin, async (req, res)=>{
     const author = new Author({
-        name: req.body.name
+        name: req.body.name,
+        user_id: req.user.id
     })
     try {        
         const newAuthor = await author.save()
@@ -66,7 +74,7 @@ router.post('/',async (req, res)=>{
 
 
 //EDIT AUTHOR ROUTE
-router.get('/:id/edit',async (req, res)=>{
+router.get('/:id/edit',isLogin, async (req, res)=>{
     try {
         const author = await Author.findById(req.params.id)
         res.render('authors/edit', {author: author})
@@ -76,7 +84,7 @@ router.get('/:id/edit',async (req, res)=>{
 }) 
 
 //UPDATE AUTHOR ROUTE
-router.put('/:id',async (req, res)=>{
+router.put('/:id',isLogin, async (req, res)=>{
     let author 
     try {        
         author = await Author.findById(req.params.id)
@@ -100,7 +108,7 @@ router.put('/:id',async (req, res)=>{
 
 
 //DELETE AUTHOR ROUTE
-router.delete('/:id', async (req, res)=>{
+router.delete('/:id', isLogin, async (req, res)=>{
     let author, book 
     try {        
         author = await Author.findById(req.params.id)

@@ -1,12 +1,12 @@
 const {Router} = require('express')
 const router = Router()
-
+const {isLogin} = require('../lib')
 const Book = require('../models/books')
 
-router.get('/', async (req, res)=>{
+router.get('/',isLogin, async (req, res)=>{
     let books
     try {
-        books = await Book.find().sort({ createdAt: 'desc' }).limit(10)
+        books = await Book.find({user_id: req.user.id}).sort({ createdAt: -1 }).limit(10)
     } catch {
         books = []
     }

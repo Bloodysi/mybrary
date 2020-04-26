@@ -5,14 +5,21 @@ const Author = require('../models/authors')
 const Book = require('../models/books')
 const ImageMimeTypes = ["image/jpeg", "image/png", "image/gif"]
 
+const {isLogin} = require('../lib')
+
 //ALL BOOKS ROUTE
-router.get('/', async (req, res)=>{
+router.get('/',isLogin, async (req, res)=>{
     let searchOption = {}
+    let books
     if (req.query.title != null && req.query.title != '') {
       searchOption.title = new RegExp(req.query.title, 'i')
     }
     try{
-        const books = await Book.find(searchOption)
+        if(searchOption.name){
+            books = await Book.find(searchOption)
+        }else{
+            books = await Book.find({user_id: req.user.id})
+        }
         res.render('books/index',{
             books: books,
             searchOption: req.query
@@ -24,13 +31,13 @@ router.get('/', async (req, res)=>{
 
 //NEW BOOK ROUTE
 
-router.get('/new', async (req, res)=>{
-   renderNewPage(res, new Book())
+router.get('/new',isLogin, async (req, res)=>{
+   renderNewPage(res, req, new Book())
 })
 
 
 //SHOW BOOKS ROUTE
-router.get('/:id', async (req, res)=>{
+router.get('/:id',isLogin, async (req, res)=>{
     try {
         const book = await Book.findById(req.params.id).populate('author').exec()
         res.render('books/show',{
@@ -43,10 +50,10 @@ router.get('/:id', async (req, res)=>{
 
 //EDIT BOOK ROUTE
 
-router.get('/:id/edit', async (req, res)=>{
+router.get('/:id/edit',isLogin, async (req, res)=>{
     try {
         const book = await Book.findById(req.params.id)
-        renderEditPage(res, book)
+        renderEditPage(res, req, book)
     } catch {
         res.redirect('/')
     }
@@ -54,28 +61,28 @@ router.get('/:id/edit', async (req, res)=>{
 
 //CREATE BOOK ROUTE
 
-router.post('/', async (req, res)=>{
+router.post('/',isLogin, async (req, res)=>{
     const {title, author, publishDate, pageCount , description,} = req.body
     const book = new Book({
         title,
         author,
         publishDate: new Date(publishDate),
         pageCount,
-        description
+        description,
+        user_id: req.user.id
     })
     saveCover(book, req.body.cover)
-    console.log(req.body.cover)
     try{
         const newBook = await book.save()
         res.redirect(`/books/${newBook.id}`)
     }catch{
-        renderNewPage(res, book, true)
+        renderNewPage(res, req, book, true)
     }
 })
 
 //UPDATE BOOK ROUTE
 
-router.put('/:id', async (req, res)=>{
+router.put('/:id', isLogin,async (req, res)=>{
     let book
     try{
         book = await Book.findById(req.params.id)
@@ -92,7 +99,7 @@ router.put('/:id', async (req, res)=>{
     }catch (e){
         console.error(e)
         if(book != null){
-            renderEditPage(res, book, true)
+            renderEditPage(res, req, book, true)
         }else{
             res.redirect('/')
         }
@@ -101,7 +108,7 @@ router.put('/:id', async (req, res)=>{
 
 // DELETE BOOK ROUTE
 
-router.delete('/:id', async (req, res)=>{
+router.delete('/:id',isLogin, async (req, res)=>{
     let book
     try {
         book = await Book.findById(req.params.id)
@@ -132,24 +139,24 @@ function saveCover(book, coverEncoded){
 }
 
 
-async function renderNewPage(res, book, hasError = false){
-    renderFormPage(res, book, 'new', hasError)
+async function renderNewPage(res, req, book, hasError = false){
+    renderFormPage(res, req, book, 'new', hasError)
 }
 
-async function renderEditPage(res, book, hasError = false){
-    renderFormPage(res, book, 'edit', hasError)
+async function renderEditPage(res, req, book, hasError = false){
+    renderFormPage(res, req, book, 'edit', hasError)
 }
 
-async function renderFormPage(res, book, form ,hasError = false){
+async function renderFormPage(res, req, book, form ,hasError = false){
     try{
-        const authors = await Author.find({})
+        const authors = await Author.find({user_id: req.user.id})
         const params ={
             authors: authors,
             book: book
         }
         if(hasError){
             if(form === 'new'){
-                params.errorMessage = 'Error creating a book'
+                params.errorMessage = 'A fill is missing'
             }else{
                 params.errorMessage = 'Error updating the book'
             }
