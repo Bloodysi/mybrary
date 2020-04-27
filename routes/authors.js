@@ -3,6 +3,7 @@ const router = Router()
 
 const Author = require('../models/authors')
 const Book = require('../models/books')
+const User = require('../models/user')
 
 const {isLogin} = require('../lib')
 
@@ -10,13 +11,14 @@ const {isLogin} = require('../lib')
 router.get('/', isLogin, async (req, res)=>{
     let searchOption = {}
     let authors
+    let AUthors
     if (req.query.name != null && req.query.name !== ''){
         searchOption.name = new RegExp(req.query.name, 'i')        
     }    
 
     try {
         if(searchOption.name){
-            authors = await Author.find(searchOption)
+            authors = await Author.find({$and:[{user_id: req.user.id}, searchOption]})
         }else{
             authors = await Author.find({user_id: req.user.id})
         }
@@ -59,8 +61,8 @@ router.post('/',isLogin, async (req, res)=>{
         user_id: req.user.id
     })
     try {        
-        const newAuthor = await author.save()
-        res.redirect(`/authors/:${newAuthor.id}`)
+        await author.save()
+        res.redirect(`/authors`)
 
     } catch (error) {
         console.error(error)
@@ -97,9 +99,9 @@ router.put('/:id',isLogin, async (req, res)=>{
             res.redirect('/')
         }
         else{
+            req.flash('error', 'Error updating author')
             res.render('authors/edit',{
                 author: author,
-                errorMessage: 'Error updating author'
             })
         }
         
@@ -109,7 +111,7 @@ router.put('/:id',isLogin, async (req, res)=>{
 
 //DELETE AUTHOR ROUTE
 router.delete('/:id', isLogin, async (req, res)=>{
-    let author, book 
+    let author
     try {        
         author = await Author.findById(req.params.id)
         await author.remove()

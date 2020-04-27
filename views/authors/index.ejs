@@ -1,4 +1,4 @@
-<h2 class="page-header">Search authors</h2>
+<h2 class="page-header">Authors</h2>
 
 <form action="/authors" method="GET">
   <div class="form-row">
@@ -7,7 +7,8 @@
         <input type="text" name="name" value="<%= searchOption.name%>">
     </div>
   </div>
-  <div class="form-row form-row-end">
+  <div class="form-row form-row-end btn-row">
+    <a href="/authors/new" class="btn btn-primary"><i class="fas fa-plus"></i></a>    
     <button class="btn btn-primary" type="submit">Search</button>
   </div>
 </form>
@@ -15,13 +16,12 @@
 
 <br>
 
-<% authors.forEach(author => { %>
-    <div class="author-row">
+<% authors.forEach(author => { %>  
+    <div class="author-row">  
       <div class="author-name"><%= author.name %></div>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="/authors/<%= author.id %>">View</a>
-        <a class="btn btn-primary" href="/authors/<%= author.id %>/edit">Edit</a>
-        <%- include('../partials/deleteForm',{ url: `/authors/${author.id}`}) %>
+      <div class="btn-row author-btn">
+        <a class="btn btn-primary" href="/authors/<%= author.id %>"><i class="fas fa-eye"></i></a>
       </div>
     </div>
+  </a>
 <% }) %>

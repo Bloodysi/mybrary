@@ -1,9 +1,19 @@
 .author-row{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem
+    background-color: hsl(var(--color-base-hue), 100%, 30%);
+    margin-bottom: 1rem;
+    border-radius: 2rem;
+    align-items: center;
+    height: 3rem;
+    
 }
 
 .author-name{
     font-size: 1.5rem;
+    padding-left: 1rem;
+}
+
+.author-btn{
+    padding-right: 1rem;
 }

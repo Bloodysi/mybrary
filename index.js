@@ -10,6 +10,7 @@ const app = express()
 
 //OTHER CONTENT
 const morgan = require('morgan')
+const flash = require('connect-flash')
 const methodOverride = require('method-override')
 const passport = require('passport')
 const mongoStore = require('connect-mongo')(session)
@@ -28,7 +29,7 @@ const mongoose = require('mongoose')
 require('./db')
 
 //SETTIGNS
-app.set('port', process.env.PORT || 3001)
+app.set('port', process.env.PORT || 3000)
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 app.set('layout', 'layouts/layout')
@@ -44,9 +45,15 @@ app.use(session({
 app.use(ejsLayouts)
 app.use(express.urlencoded({extended: false, limit: '10mb'}))
 app.use(methodOverride('_method'))
+app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 
+//GLOBAL VARIABLES
+app.use((req, res, next)=>{
+    res.locals.errorMessage = req.flash('error')
+    next()
+})
 
 //ROUTES
 app.use('/', indexRouter)
