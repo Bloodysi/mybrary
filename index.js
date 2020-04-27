@@ -52,6 +52,7 @@ app.use(passport.session())
 //GLOBAL VARIABLES
 app.use((req, res, next)=>{
     res.locals.errorMessage = req.flash('error')
+    res.locals.user = req.user
     next()
 })
 

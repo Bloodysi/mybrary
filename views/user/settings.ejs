@@ -1,0 +1,32 @@
+<h2 class="page-header">Settings</h2>
+
+<form action="/user/<%= user.id%>?_method=PUT" method="POST">
+<div class="form-row">
+    <div class="form-item">
+        <label>Favorite Categorie</label>
+        <select name="categorie">                  
+            <% categories.forEach(categorie=>{ %>
+    
+                <% if(categorie === user.categorie){ %>
+                    <option selected label="<%= user.categorie%>" value="<%= categorie%>"></option>
+                <% } else{ %>  
+                    <option label="<%= categorie%>" value="<%= categorie%>"><%= categorie%></option>
+                <% } %> 
+    
+            <%})%>                 
+        </select>
+    </div>
+
+    <div class="form-item">
+        <label>About me</label>
+        <textarea name="about"><%= user.about%></textarea>
+    </div> 
+    
+</div>
+
+<div class="form-row form-row-end btn-row">
+    <a class="btn btn-danger" href="/user/logout">LogOut</a>
+    <button class="btn btn-primary" type="submit">Update</button>
+</div>
+
+</form>

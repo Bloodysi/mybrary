@@ -7,6 +7,8 @@ const ImageMimeTypes = ["image/jpeg", "image/png", "image/gif"]
 
 const {isLogin} = require('../lib')
 
+const status = ['future', 'reading', 'read']
+
 //ALL BOOKS ROUTE
 router.get('/',isLogin, async (req, res)=>{
     let searchOption = {}
@@ -62,16 +64,21 @@ router.get('/:id/edit',isLogin, async (req, res)=>{
 //CREATE BOOK ROUTE
 
 router.post('/',isLogin, async (req, res)=>{
-    const {title, author, publishDate, pageCount , description,} = req.body
+    const {title, author, publishDate, pageCount , description, status} = req.body
     const book = new Book({
         title,
         author,
-        publishDate: new Date(publishDate),
-        pageCount,
         description,
+        status,
         user_id: req.user.id
     })
-    saveCover(book, req.body.cover)
+    console.log(req.body)
+    if(!req.body.cover){
+        return req.flash('error', 'Choose a image')
+    }else{
+        saveCover(book, req.body.cover)
+    }
+    console.log(book)
     try{
         const newBook = await book.save()
         res.redirect(`/books/${newBook.id}`)
@@ -88,9 +95,8 @@ router.put('/:id', isLogin,async (req, res)=>{
         book = await Book.findById(req.params.id)
         book.title = req.body.title
         book.author = req.body.author
-        book.publishDate = req.body.publishDate
-        book.pageCount= req.body.pageCount
         book.description= req.body.description
+        book.status = req.body.status
         if(req.body.cover != null && req.body.cover !== ''){
             saveCover(book, req.body.cover)
         }
@@ -152,7 +158,8 @@ async function renderFormPage(res, req, book, form ,hasError = false){
         const authors = await Author.find({user_id: req.user.id})
         const params ={
             authors: authors,
-            book: book
+            book: book,
+            status: status
         }
         if(hasError){
             if(form === 'new'){

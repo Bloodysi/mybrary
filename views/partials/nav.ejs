@@ -1,10 +1,13 @@
 <header>
     <nav class="header-nav">
         <a href="/" class="header-title">Mybrary</a>
-        <ul>
-            <li class="header-link"><a href="/authors">Authors</a></li>
-            <li class="header-link"><a href="/books">Books</a></li>
-            <li class="header-link"><a href="/user/logOut">LogOut</a></li>
-        </ul>
+        <% if(locals.user){ %>
+            <ul>
+                <li class="header-link"><a href="/authors">Authors</a></li>
+                <li class="header-link"><a href="/books">Books</a></li>
+                <li class="header-link"><a href="/user/profile">Profile</a></li>
+                <li class="header-link"><a href="/user/settings"><i class="fas fa-cog"></i></a></li>
+            </ul>
+        <% } %>
     </nav>
 </header>

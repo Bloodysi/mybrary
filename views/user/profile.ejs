@@ -1,0 +1,32 @@
+<h2 class="page-header"><%= user.username%></h2>
+
+<div class="user-details">
+
+    <div class="user-details-grid">
+        <div class="book-details-label">Read Books:</div>
+        <div><%= readBooks.length%></div>
+
+        <div class="book-details-label">Authors:</div>
+        <div><%= authors.length%></div>
+        <div class="book-details-label">Favorite:</div>
+        <div><%= user.categorie%></div>            
+        <div class="book-details-label">About me:</div>
+        <div><%= user.about%></div>     
+    </div>
+
+    <% if(readingBooks.length > 0){ %>
+        <div class="user-reading-book">        
+            <h3 class="user-book-state">Reading now:</h3>
+            <% readingBooks.forEach(book=>{ %>              
+                    <a class="user-book-reading book-title" href="/books/<%= book.id%>">
+                        <img class="book-cover" src="<%= book.coverImagePath%>" alt="Reading Book">
+                        <h3><%= book.title%></h3>
+                    </a>
+            <% })%>
+        </div>
+    <% } %>
+
+</div>
+
+<h2 class="page-header">Recently Added</h2>
+<%- include('../partials/bookGrid',{books: books, large: true})%>  

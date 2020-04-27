@@ -13,6 +13,11 @@
     --book-cover-width: var(--book-cover-width-large);
 }
 
+.book-title{
+    text-decoration: none;
+    color: var(--color-text-light);
+}
+
 .book-grid{
     display: grid;
     justify-content: center;

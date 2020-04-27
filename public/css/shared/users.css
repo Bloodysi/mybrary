@@ -1,0 +1,35 @@
+.user-details{
+    display: flex;
+    justify-content: space-around;
+}
+
+.user-details-grid{
+    padding-top: 2.7rem;
+    display: grid;
+    align-content: flex-start;
+    align-items: center;
+    grid-gap: 1rem;
+    grid-template-columns: auto auto;
+    margin-right: auto;
+}
+
+.user-reading-book{
+    display: flex;
+    align-self: flex-end;
+    align-content: flex-end;
+    margin: auto auto;
+    margin-left: .25rem;
+}
+
+.user-book-state{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: .25rem;
+    margin-top: 0;
+}
+
+
+.user-book-reading{
+    margin-left: 1rem;
+}

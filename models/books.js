@@ -6,25 +6,18 @@ const bookSchema = new mongoose.Schema({
         required: true
     },
     description:{
-        type: String
-    },
-    publishDate:{
-        type: Date,
-        required: true
-    },
-    pageCount:{
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     createdAt:{
         type: Date,
-        required: true,
-        default: Date.now()
+        default: Date.now(),
+        required: true
     },
     author:{
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'authors',
         required: true,
-        ref: 'authors'
     },
     coverImage:{
         type: Buffer,
@@ -36,6 +29,11 @@ const bookSchema = new mongoose.Schema({
     },
     user_id:{
         type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    status: {
+        type: String,
+        default: 'future',
         required: true
     }
 
