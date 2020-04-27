@@ -11,7 +11,6 @@ const {isLogin} = require('../lib')
 router.get('/', isLogin, async (req, res)=>{
     let searchOption = {}
     let authors
-    let AUthors
     if (req.query.name != null && req.query.name !== ''){
         searchOption.name = new RegExp(req.query.name, 'i')        
     }    

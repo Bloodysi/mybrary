@@ -53,3 +53,17 @@
   color: var(--color-btn-danger-text-dark);
   background-color: var(--color-btn-danger-background-dark);
 }
+
+.btn-follow{
+  color: black;
+  background-color: hsl(500, 100%, 73%)
+}
+
+.btn-unfollow{
+  color: black;
+  background-color: var(--color-btn-danger-background);
+}
+
+.follow-btn{
+  justify-content: center;
+}

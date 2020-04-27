@@ -23,6 +23,8 @@ const indexRouter = require('./routes/index')
 const authorRouter = require('./routes/authors')
 const bookRouter = require('./routes/books')
 const userRouter = require('./routes/user')
+const socialRouter = require('./routes/social')
+const followRouter = require('./routes/follow')
 
 //DB
 const mongoose = require('mongoose')
@@ -58,9 +60,11 @@ app.use((req, res, next)=>{
 
 //ROUTES
 app.use('/', indexRouter)
+app.use('/', followRouter)
 app.use('/authors', authorRouter)
 app.use('/books', bookRouter)
 app.use('/user', userRouter)
+app.use('/social', socialRouter)
 
 //STATIC FILES
 app.use(express.static('public'))

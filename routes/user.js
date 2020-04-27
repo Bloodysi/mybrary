@@ -2,11 +2,12 @@ const { Router } = require('express')
 const router = Router()
 const bcrypt = require('bcrypt')
 const passport = require('passport')
-const {isNotLogin} = require('../lib')
+const {isLogin, isNotLogin} = require('../lib')
 
 const User = require('../models/user')
 const Author = require('../models/authors')
 const Book = require('../models/books')
+const Follow = require('../models/follow')
 
 const categories = [
     'Action and Adventure',
@@ -67,7 +68,7 @@ router.post('/register', isNotLogin,async (req, res)=>{
 
 //USER UPDATE
 
-router.put('/:id', async (req, res)=>{
+router.put('/:id', isLogin, async (req, res)=>{
 
     try{
         let user = await User.findById(req.params.id)
@@ -82,19 +83,24 @@ router.put('/:id', async (req, res)=>{
 
 // PROFILE GET
 
-router.get('/profile', async (req, res)=>{
+router.get('/profile', isLogin,  async (req, res)=>{
     try {        
         const user = await User.findById(req.user.id)
         const authors = await Author.find({user_id: req.user.id})
         const books = await Book.find({user_id: req.user.id}).sort({ createdAt: -1 })
         const readBooks = await Book.find({$and:[{user_id: req.user.id},{status: 'read'}]})
         const readingBooks = await Book.find({$and:[{user_id: req.user.id},{status: 'reading'}]}).limit(2)
+        const userFollowers = await Follow.find({user_to: req.user.id})
+        const userFollowing = await Follow.find({user_from: req.user.id})
+
         res.render('user/profile',{
             user: user,
             authors: authors,
             books: books,
             readingBooks: readingBooks,
-            readBooks: readBooks
+            readBooks: readBooks,
+            userFollowers: userFollowers,
+            userFollowing: userFollowing
         })
     } catch  {
         res.redirect('/')
@@ -104,7 +110,7 @@ router.get('/profile', async (req, res)=>{
 
 //SETTIGNS
 
-router.get('/settings',(req, res)=>{
+router.get('/settings', isLogin, (req, res)=>{
     res.render('user/settings',{
         categories: categories
     })
@@ -112,7 +118,7 @@ router.get('/settings',(req, res)=>{
 
 //LOGOUT
 
-router.get('/logout', (req, res)=>{
+router.get('/logout', isLogin, (req, res)=>{
     req.logOut()
     res.redirect('/user/login')
 })

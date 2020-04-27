@@ -33,3 +33,15 @@
 .user-book-reading{
     margin-left: 1rem;
 }
+
+.follower-show{
+    flex-direction: initial;
+    align-items: center;
+    margin-left: 0;
+    margin-right: 4rem;
+}
+
+.follower-show p{
+    color: var(--color-text-light);
+    padding-right: 5rem;
+}

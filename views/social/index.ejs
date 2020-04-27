@@ -1,0 +1,26 @@
+<h2 class="page-header">Social</h2>
+
+<form action="/social" method="GET">
+  <div class="form-row">
+    <div class="form-item">
+        <label>Username</label>
+        <input type="text" name="username" value="<%= searchOption.username%>">
+    </div>
+  </div>
+  <div class="form-row form-row-end btn-row">   
+    <button class="btn btn-primary" type="submit">Search</button>
+  </div>
+</form>
+
+
+<br>
+
+<% users.forEach(user => { %>  
+    <div class="author-row">  
+      <div class="author-name"><%= user.username %></div>
+      <div class="btn-row author-btn">
+        <a class="btn btn-primary" href="/social/user/<%= user.id %>"><i class="fas fa-eye"></i></a>
+      </div>
+    </div>
+  </a>
+<% }) %>

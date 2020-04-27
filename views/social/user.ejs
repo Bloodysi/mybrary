@@ -6,7 +6,14 @@
         <p>Followers: <%= userFollowers.length%></p>
         <p>Following: <%= userFollowing.length%></p>
     </div>
-    
+    <div class="form-item follow-btn">
+       <% if(statusFollow === 'follow'){ %>
+            <%- include('follow-btn', {type: 'follow'})%>
+       <% }else { %>
+            <%- include('follow-btn', {type: 'unfollow'})%>
+       <% } %>
+
+    </div>
 </div>
 
 <div class="user-details">
@@ -34,6 +41,7 @@
             <% })%>
         </div>
     <% } %>
+
 </div>
 
 <h2 class="page-header">Recently Added</h2>
